@@ -1,0 +1,21 @@
+{
+  "name": "bower_learn",
+  "authors": [
+    "seightday <seightday@gmail.com>"
+  ],
+  "description": "bower_learn",
+  "main": "bower_learn",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.2.4"
+  }
+}
