@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="svntools" default="product" basedir=".">
+	<property name="dir" value="./build"/>
+	<echo message="dir is ${dir}"></echo>
+	<target name="test">
+		<replaceregexp byline="true" encoding="UTF-8">
+		  <regexp pattern="(.*)p:p"/>
+		  <substitution expression="//\1p:p"/>
+		  <fileset dir="${dir}">
+		  	<include name="**/*-temp.js"/>
+		  </fileset>
+		</replaceregexp>
+		<replaceregexp byline="true" encoding="UTF-8">
+			  <regexp pattern="(^[/\s]*)(.*)p:t"/>
+			  <substitution expression="\2p:t"/>
+			<fileset dir="${dir}">
+				<include name="**/*-temp.js"/>
+			  </fileset>
+		</replaceregexp>
+	</target>
+	
+	<target name="product">
+		<replaceregexp byline="true" encoding="UTF-8">
+		  <regexp pattern="(.*)p:t"/>
+		  <substitution expression="//\1p:t"/>
+			<fileset dir="${dir}">
+				<include name="**/*-temp.js"/>
+		  </fileset>
+		</replaceregexp>
+		<replaceregexp byline="true" encoding="UTF-8">
+			  <regexp pattern="(^[/\s]*)(.*)p:p"/>
+			  <substitution expression="\2p:p"/>
+			<fileset dir="${dir}">
+				<include name="**/*-temp.js"/>
+		  </fileset>
+		</replaceregexp>
+	</target>
+</project>
