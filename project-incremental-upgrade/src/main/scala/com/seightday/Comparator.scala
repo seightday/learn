@@ -27,6 +27,9 @@ class Comparator extends CommandLineRunner {
   @Value("${dest}")
   val dest:String=null
 
+  @Value("${exclude.files}")
+  val excludeFiles:String=null
+
   @Autowired
   val jdbcTemplate:JdbcTemplate=null
 
@@ -62,6 +65,7 @@ class Comparator extends CommandLineRunner {
       jdbcTemplate.execute(s"insert into dir2 (path,md5,rpath) values ('$p','$md5','$rpath')")
     }
 
+    val excludeSummary=new StringBuilder()
     val  summary=new File(dest+"/summary.txt")
     summary.delete()
     //增
@@ -71,9 +75,16 @@ class Comparator extends CommandLineRunner {
     while (iterator.hasNext){
       val r=iterator.next()
       val path=r.get("path")
-      val p=dest+r.get("rpath")
-      FileUtils.copyFile(new File(path.toString),new File(p))
-      FileUtils.write(summary,r.get("rpath")+"\r\n",true)
+
+      val excluded=isExclude(path.toString)
+      if(excluded){
+        logger.info(s"${path} is excluded")
+        excludeSummary.append(path).append("\r\n")
+      }else{
+        val p=dest+r.get("rpath")
+        FileUtils.copyFile(new File(path.toString),new File(p))
+        FileUtils.write(summary,r.get("rpath")+"\r\n",true)
+      }
     }
 
     //改
@@ -83,9 +94,16 @@ class Comparator extends CommandLineRunner {
     while (iterator.hasNext){
       val r=iterator.next()
       val path=r.get("path")
-      val p=dest+r.get("rpath")
-      FileUtils.copyFile(new File(path.toString),new File(p))
-      FileUtils.write(summary,r.get("rpath")+"\r\n",true)
+
+      val excluded=isExclude(path.toString)
+      if(excluded){
+        logger.info(s"${path} is excluded")
+        excludeSummary.append(path).append("\r\n")
+      }else{
+        val p=dest+r.get("rpath")
+        FileUtils.copyFile(new File(path.toString),new File(p))
+        FileUtils.write(summary,r.get("rpath")+"\r\n",true)
+      }
     }
 
     //删
@@ -97,7 +115,22 @@ class Comparator extends CommandLineRunner {
       FileUtils.write(summary,r.get("rpath")+"\r\n",true)
     }
 
+    //排除
+    FileUtils.write(summary,"排除\r\n",true)
+    FileUtils.write(summary,excludeSummary,true)
+  }
 
+  def isExclude(path:String):Boolean={
+    val files=excludeFiles.split(",")
+    val length=files.length
 
+    var excluded=false
+    for(i <- 0 until length){
+      if(path.endsWith(files.apply(i))){
+        excluded=true
+      }
+    }
+
+    return excluded
   }
 }
