@@ -1,0 +1,1 @@
+createobject("wscript.shell").appactivate("cityapp")
