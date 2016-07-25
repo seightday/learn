@@ -1,0 +1,8 @@
+{
+  "name": "md5sum",
+  "main": "md5sum.js",
+  "dependencies": {
+    "filepath":"1.1.0",
+	"eventproxy":"0.3.4"
+  }
+}
